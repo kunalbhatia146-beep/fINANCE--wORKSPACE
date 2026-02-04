@@ -644,6 +644,8 @@ body {
     padding: 25px;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+    min-height: 320px;
 }
 
 .chart-card h3 {
@@ -651,6 +653,11 @@ body {
     margin-bottom: 20px;
     font-size: 18px;
     font-weight: 600;
+}
+
+.chart-card canvas {
+    height: 260px !important;
+    width: 100% !important;
 }
 
 /* Filters */

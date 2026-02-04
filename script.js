@@ -677,8 +677,39 @@ class FinanceTracker {
     }
 
     setupCharts() {
+        const incomeCanvas = document.getElementById('incomeExpenseChart');
+        const expenseCanvas = document.getElementById('expenseCategoryChart');
+
+        if (!incomeCanvas || !expenseCanvas) {
+            return;
+        }
+
+        if (typeof Chart === 'undefined') {
+            this.loadChartJs(() => this.setupCharts());
+            return;
+        }
+
         this.setupIncomeExpenseChart();
         this.setupExpenseCategoryChart();
+    }
+
+    loadChartJs(onReady) {
+        if (this.chartJsLoading) {
+            return;
+        }
+        this.chartJsLoading = true;
+
+        const script = document.createElement('script');
+        script.src = 'chart.min.js';
+        script.onload = () => {
+            this.chartJsLoading = false;
+            onReady();
+        };
+        script.onerror = () => {
+            this.chartJsLoading = false;
+            console.error('Failed to load chart.min.js');
+        };
+        document.head.appendChild(script);
     }
 
     setupIncomeExpenseChart() {
@@ -694,8 +725,11 @@ class FinanceTracker {
             .filter(t => t.type === 'expense')
             .reduce((sum, t) => sum + t.amount, 0);
 
-        if (window.incomeExpenseChart) {
-            window.incomeExpenseChart.destroy();
+        if (typeof Chart !== 'undefined') {
+            const existingChart = Chart.getChart(ctx);
+            if (existingChart) {
+                existingChart.destroy();
+            }
         }
 
         window.incomeExpenseChart = new Chart(ctx, {
@@ -740,8 +774,11 @@ class FinanceTracker {
             return category ? category.color : '#95a5a6';
         });
 
-        if (window.expenseCategoryChart) {
-            window.expenseCategoryChart.destroy();
+        if (typeof Chart !== 'undefined') {
+            const existingChart = Chart.getChart(ctx);
+            if (existingChart) {
+                existingChart.destroy();
+            }
         }
 
         if (data.length === 0) {
