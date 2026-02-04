@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-wallet"></i> Finance Tracker</h1>
+                <nav class="nav">
+                    <button class="nav-btn active" data-section="dashboard">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </button>
+                    <button class="nav-btn" data-section="accounts">
+                        <i class="fas fa-university"></i> Accounts
+                    </button>
+                    <button class="nav-btn" data-section="transactions">
+                        <i class="fas fa-exchange-alt"></i> Transactions
+                    </button>
+                    <button class="nav-btn" data-section="budget">
+                        <i class="fas fa-piggy-bank"></i> Budget
+                    </button>
+                    <button class="nav-btn" data-section="categories">
+                        <i class="fas fa-tags"></i> Categories
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="section-header">
+                    <h2>Dashboard</h2>
+                    <div class="date-range">
+                        <select id="dashboard-period">
+                            <option value="month">This Month</option>
+                            <option value="year">This Year</option>
+                            <option value="all">All Time</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card income">
+                        <div class="stat-icon">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Total Income</h3>
+                            <p class="stat-amount" id="total-income">$0.00</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card expense">
+                        <div class="stat-icon">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Total Expenses</h3>
+                            <p class="stat-amount" id="total-expense">$0.00</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card balance">
+                        <div class="stat-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Balance</h3>
+                            <p class="stat-amount" id="balance">$0.00</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card savings">
+                        <div class="stat-icon">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Savings Rate</h3>
+                            <p class="stat-amount" id="savings-rate">0%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>Income vs Expenses</h3>
+                        <canvas id="incomeExpenseChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Expense Categories</h3>
+                        <canvas id="expenseCategoryChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="recent-transactions">
+                    <h3>Recent Transactions</h3>
+                    <div id="recent-transactions-list" class="transaction-list">
+                        <!-- Recent transactions will be populated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Accounts Section -->
+            <section id="accounts" class="section">
+                <div class="section-header">
+                    <h2>Bank Accounts</h2>
+                    <div class="account-actions">
+                        <button class="btn btn-secondary" id="sync-accounts-btn">
+                            <i class="fas fa-sync-alt"></i> Sync All Accounts
+                        </button>
+                        <button class="btn btn-primary" id="add-account-btn">
+                            <i class="fas fa-plus"></i> Connect Bank Account
+                        </button>
+                    </div>
+                </div>
+
+                <div class="accounts-overview">
+                    <div class="account-summary">
+                        <h3>Total Balance</h3>
+                        <p class="total-balance" id="total-balance-amount">$0.00</p>
+                    </div>
+                    <div class="account-summary">
+                        <h3>Connected Accounts</h3>
+                        <p class="account-count" id="connected-accounts-count">0</p>
+                    </div>
+                    <div class="account-summary">
+                        <h3>Last Sync</h3>
+                        <p class="last-sync" id="last-sync-time">Never</p>
+                    </div>
+                </div>
+
+                <div class="accounts-grid" id="accounts-grid">
+                    <!-- Bank accounts will be populated here -->
+                </div>
+
+                <div class="bank-integration-info">
+                    <div class="info-card">
+                        <h3><i class="fas fa-shield-alt"></i> Secure Bank Integration</h3>
+                        <p>Connect your bank accounts securely using Plaid's industry-standard encryption. Your banking credentials are never stored on our servers.</p>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Bank-level security (256-bit SSL encryption)</li>
+                            <li><i class="fas fa-check"></i> Real-time transaction updates</li>
+                            <li><i class="fas fa-check"></i> Automatic categorization</li>
+                            <li><i class="fas fa-check"></i> Support for 11,000+ financial institutions</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transactions Section -->
+            <section id="transactions" class="section">
+                <div class="section-header">
+                    <h2>Transactions</h2>
+                    <button class="btn btn-primary" id="add-transaction-btn">
+                        <i class="fas fa-plus"></i> Add Transaction
+                    </button>
+                </div>
+
+                <div class="filters">
+                    <input type="text" id="search-transactions" placeholder="Search transactions...">
+                    <select id="filter-category">
+                        <option value="">All Categories</option>
+                    </select>
+                    <select id="filter-type">
+                        <option value="">All Types</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                    <input type="date" id="filter-date-from" placeholder="From">
+                    <input type="date" id="filter-date-to" placeholder="To">
+                </div>
+
+                <div class="transaction-list" id="all-transactions-list">
+                    <!-- All transactions will be populated here -->
+                </div>
+            </section>
+
+            <!-- Budget Section -->
+            <section id="budget" class="section">
+                <div class="section-header">
+                    <h2>Budget</h2>
+                    <button class="btn btn-primary" id="add-budget-btn">
+                        <i class="fas fa-plus"></i> Add Budget
+                    </button>
+                </div>
+
+                <div class="budget-grid" id="budget-grid">
+                    <!-- Budget items will be populated here -->
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section id="categories" class="section">
+                <div class="section-header">
+                    <h2>Categories</h2>
+                    <button class="btn btn-primary" id="add-category-btn">
+                        <i class="fas fa-plus"></i> Add Category
+                    </button>
+                </div>
+
+                <div class="categories-grid" id="categories-grid">
+                    <!-- Categories will be populated here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for Add/Edit Transaction -->
+    <div id="transaction-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="transaction-modal-title">Add Transaction</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="transaction-form">
+                <div class="form-group">
+                    <label for="transaction-type">Type</label>
+                    <select id="transaction-type" required>
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-amount">Amount</label>
+                    <input type="number" id="transaction-amount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-description">Description</label>
+                    <input type="text" id="transaction-description" required>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-category">Category</label>
+                    <select id="transaction-category" required>
+                        <option value="">Select Category</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-date">Date</label>
+                    <input type="date" id="transaction-date" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-transaction">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Add/Edit Budget -->
+    <div id="budget-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="budget-modal-title">Add Budget</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="budget-form">
+                <div class="form-group">
+                    <label for="budget-category">Category</label>
+                    <select id="budget-category" required>
+                        <option value="">Select Category</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="budget-amount">Budget Amount</label>
+                    <input type="number" id="budget-amount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="budget-period">Period</label>
+                    <select id="budget-period" required>
+                        <option value="monthly">Monthly</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-budget">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Add/Edit Category -->
+    <div id="category-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="category-modal-title">Add Category</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="category-form">
+                <div class="form-group">
+                    <label for="category-name">Name</label>
+                    <input type="text" id="category-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="category-type">Type</label>
+                    <select id="category-type" required>
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="category-color">Color</label>
+                    <input type="color" id="category-color" value="#3498db">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-category">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Bank Account Connection -->
+    <div id="bank-account-modal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3>Connect Bank Account</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="bank-connection-flow">
+                <div class="connection-step active" id="step-1">
+                    <h4><i class="fas fa-search"></i> Search Your Bank</h4>
+                    <div class="bank-search">
+                        <input type="text" id="bank-search" placeholder="Search for your bank or institution...">
+                        <div class="bank-list" id="bank-list">
+                            <!-- Popular banks will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="connection-step" id="step-2">
+                    <h4><i class="fas fa-sign-in-alt"></i> Secure Login</h4>
+                    <div class="bank-login-info">
+                        <p>You'll be redirected to your bank's secure login page. Enter your credentials there - we never see or store your password.</p>
+                        <div class="selected-bank" id="selected-bank-info">
+                            <!-- Selected bank info will be shown here -->
+                        </div>
+                        <button class="btn btn-primary" id="proceed-login-btn">
+                            <i class="fas fa-external-link-alt"></i> Continue to Bank Login
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="connection-step" id="step-3">
+                    <h4><i class="fas fa-check-circle"></i> Account Selection</h4>
+                    <div class="account-selection" id="account-selection">
+                        <p>Select which accounts you'd like to connect:</p>
+                        <div class="accounts-to-connect" id="accounts-to-connect">
+                            <!-- Available accounts will be listed here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="connection-step" id="step-4">
+                    <h4><i class="fas fa-spinner fa-spin"></i> Connecting...</h4>
+                    <div class="connection-progress">
+                        <p>Establishing secure connection with your bank...</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="connection-progress"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="connection-step" id="step-5">
+                    <h4><i class="fas fa-check-circle"></i> Success!</h4>
+                    <div class="connection-success">
+                        <p>Your bank account has been successfully connected!</p>
+                        <div class="connected-account-info" id="connected-account-info">
+                            <!-- Connected account details will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancel-bank-connection">Cancel</button>
+                <button type="button" class="btn btn-primary" id="next-step-btn" style="display: none;">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
